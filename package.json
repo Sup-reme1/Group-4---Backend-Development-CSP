@@ -1,0 +1,30 @@
+{
+  "name": "group-4-cap-stone-project",
+  "version": "1.0.0",
+  "description": "Tax Calculator Backend Development",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sup-reme1/Group-4---Backend-Development-CSP.git"
+  },
+  "author": "Group 4 Backend Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sup-reme1/Group-4---Backend-Development-CSP/issues"
+  },
+  "homepage": "https://github.com/Sup-reme1/Group-4---Backend-Development-CSP#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-session": "^1.18.2",
+    "mongoose": "^9.1.1",
+    "nodemon": "^3.1.11"
+  }
+}
