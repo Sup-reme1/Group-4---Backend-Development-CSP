@@ -9,10 +9,6 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sup-reme1/Group-4---Backend-Development-CSP.git"
-  },
   "author": "Group 4 Backend Team",
   "license": "ISC",
   "bugs": {
