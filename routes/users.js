@@ -3,6 +3,10 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
+router.get('/signup', (req, res) => {
+    res.render('signup');
+});
+
 // POST Signup
 router.post('/signup', async (req, res) => {
     try {
@@ -19,14 +23,18 @@ router.post('/signup', async (req, res) => {
         await user.save(); // password is hashed automatically
 
         // Redirect to login page after signup
-        res.redirect('/users/login');
+        res.status(200).json({ 'message': 'User registered successfully' });
 
     } catch (err) {
         console.error(err);
-        res.render('signup', { error: 'Something went wrong. Try again.' });
+        res.status(500).json({ 'message': 'Something went wrong. Try again.' });
     }
 });
 
+
+router.get('/login', (req, res) => {
+    res.render('login');
+});
 // POST Login
 router.post('/login', async (req, res) => {
     try {
@@ -42,11 +50,11 @@ router.post('/login', async (req, res) => {
         req.session.userId = user._id;
 
         // Redirect to dashboard/home
-        res.redirect('/');
+        res.status(200).json({ 'message': 'Login successful' });
 
     } catch (err) {
         console.error(err);
-        res.render('login', { error: 'Something went wrong. Try again.' });
+        res.status(500).json({ 'message': 'Something went wrong. Try again.' });
     }
 });
 

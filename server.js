@@ -31,9 +31,12 @@ app.use((req, res, next) => {
     next();
 });
 
+// View engine
+app.set('view engine', 'ejs');
+
 // ROUTES
-// app.use('/users', require('./routes/users'));
-// app.use('/', require('./routes/notes')); // handles "/" and passes notes
+app.use('/users', require('./routes/users'));
+app.use('/', require('./routes/taxApis')); // handles "/" and passes notes
 
 // Start server
 const PORT = process.env.PORT || 3000;
