@@ -9,35 +9,40 @@ const TaxService = {
             { limit: Infinity, rate: 0.25 }   // Above 50M
         ],
 
-    /** Mandatory 8% of Basic + Housing + Transport */
-    calculatePension (basic, housing, transport) {
-        return (basic + housing + transport) * 0.08;
+    calculatePension (grossIncome) {
+        return (grossIncome) * 0.08;
     },
 
-    /** New 2026 Rule: Lower of 20% of rent or 500k cap */
+    calculateNHF (grossIncome) {
+        return (grossIncome) * 0.025;
+    },
+
     calculateRentRelief (actualRent) {
         const calculatedRelief = actualRent * 0.20;
         return Math.min(calculatedRelief, 500000);
     },
+
     /** Main Engine Logic */
     calculateAnnualTax (params) {
         const { 
-            grossIncome, basic, housing, 
-            transport, actualRent, otherDeductions = 0 
+            grossIncome, actualRent, otherDeductions = 0 
         } = params;
 
         // 1. Calculate Statutory Deductions
-        const pension = this.calculatePension(basic, housing, transport);
-        const nhf = basic * 0.025; // 2.5% of Basic
+        var pension = this.calculatePension(grossIncome);
+        var nhf = this.calculateNHF(grossIncome);
+        var rentRelief;
+        if (actualRent){
+            rentRelief = this.calculateRentRelief(actualRent);
+        }else{
+            rentRelief = 0;
+        }
 
-        // 2. Apply Rent Relief
-        const rentRelief = this.calculateRentRelief(actualRent);
+        // 2. Determine Taxable Income
+        var totalReliefs = pension + nhf + rentRelief + otherDeductions;
+        var taxableIncome = Math.max(0, grossIncome - totalReliefs);
 
-        // 3. Determine Taxable Income
-        const totalReliefs = pension + nhf + rentRelief + otherDeductions;
-        const taxableIncome = Math.max(0, grossIncome - totalReliefs);
-
-        // 4. Progressive Calculation (The "Bucket" Logic)
+        // 3. Progressive Calculation (The "Bucket" Logic)
         let taxPayable = 0;
         let previousLimit = 0;
 
@@ -52,6 +57,10 @@ const TaxService = {
         }
 
         return {
+            pensionRelief: pension,
+            NHFRelief: nhf,
+            rentRelief: (rentRelief !== "") ? rentRelief : "",
+            totalReliefs,
             taxableIncome: Number(taxableIncome.toFixed(2)),
             annualTax: Number(taxPayable.toFixed(2)),
             monthlyTax: Number((taxPayable / 12).toFixed(2))
@@ -61,17 +70,11 @@ const TaxService = {
 
 
 
-
-
-
 // --- Usage Example ---
 const engine = TaxService;
 const result = engine.calculateAnnualTax({
-    grossIncome: 12000000,
-    basic: 6000000,
-    housing: 3000000,
-    transport: 2000000,
-    actualRent: 2000000
+    grossIncome: 60000000,
+    actualRent: 4000000
 });
 
-console.log(`Monthly PAYE: ₦${result.monthlyTax.toLocaleString()}`);
+console.log(result);
