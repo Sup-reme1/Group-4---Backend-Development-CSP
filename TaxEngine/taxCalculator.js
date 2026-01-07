@@ -78,3 +78,5 @@ const result = engine.calculateAnnualTax({
 });
 
 console.log(result);
+
+module.exports = TaxService;
