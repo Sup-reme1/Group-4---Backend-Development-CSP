@@ -3,12 +3,12 @@ const Income = require('../models/Income');
 exports.createIncome = async (req, res) => {
   try {
     const {
-      description,
-      incomeType,
-      amount,
+      description, // required
+      incomeType, // required
+      amount, // required
       currency,
       exchangeRate,
-      dateReceived,
+      dateReceived, // required
       taxYear,
       isTaxable,
       taxWithheld,
@@ -69,6 +69,7 @@ exports.createIncome = async (req, res) => {
   }
 };
 
+// Explain This
 exports.getIncomeByUser = async (req, res) => {
   try {
     const { userId } = req.params;

@@ -7,7 +7,7 @@ function isAuth(req, res, next) {
     next();
 }
 
-router.get('/addincome', isAuth, async (req, res) => {
+router.get('/', isAuth, async (req, res) => {
     try {
         res.status(200).json({ 'message': 'Income added successfully' });
     } catch (err) {

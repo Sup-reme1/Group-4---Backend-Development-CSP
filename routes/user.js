@@ -49,7 +49,6 @@ router.post('/login', async (req, res) => {
         // Save user session
         req.session.userId = user._id;
 
-        // Redirect to dashboard/home
         res.status(200).json({ 'message': 'Login successful' });
 
     } catch (err) {
@@ -58,12 +57,43 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Update User Info
+router.put('/update/:id', (req, res) => {
+  try {
+    const user = User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Profile not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: user
+    });
+  } catch (error) {
+    console.error('Update Profile Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error updating tax profile',
+      error: error.message
+    });
+  }
+});
+
 // Logout
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) console.error(err);
         res.clearCookie('connect.sid');
-        res.redirect('/users/login');
+        // res.redirect('/users/login');
     });
 });
 
