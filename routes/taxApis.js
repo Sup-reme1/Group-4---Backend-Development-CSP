@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const TaxService = require('../TaxEngine/taxCalculator');
 
 // Middleware to check if user is authenticated
 function isAuth(req, res, next) {
@@ -9,10 +10,16 @@ function isAuth(req, res, next) {
 
 router.get('/', isAuth, async (req, res) => {
     try {
-        res.status(200).json({ 'message': 'Income added successfully' });
+        const { grossIncome, actualRent, otherDeductions } = req.body;
+        const result = TaxService.calculateAnnualTax({
+            grossIncome: parseFloat(grossIncome),
+            actualRent: parseFloat(actualRent),
+            otherDeductions: parseFloat(otherDeductions)
+        });
+        res.status(200).json(result);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ 'message': 'Failed to add income' });
+        res.status(500).json({ 'message': 'Error calculating tax', 'error': err.message });
     }
 });
 
