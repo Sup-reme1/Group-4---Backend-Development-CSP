@@ -58,15 +58,15 @@ const incomeSchema = new mongoose.Schema({
     required: [true, 'Date received is required'],
     index: true
   },
-  month: {
-    type: Number,
-    min: 1,
-    max: 12
-  },
-  year: {
-    type: Number,
-    index: true
-  },
+  // month: {
+  //   type: Number,
+  //   min: 1,
+  //   max: 12
+  // },
+  // year: {
+  //   type: Number,
+  //   index: true
+  // },
   taxYear: {
     type: Number,
     default: 2025

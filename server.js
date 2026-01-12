@@ -12,7 +12,8 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json()); // parse application/json
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(methodOverride('_method'));
 
@@ -37,6 +38,7 @@ app.set('view engine', 'ejs');
 // ROUTES
 app.use('/api/user', require('./routes/user'));
 app.use('/api/income', require('./routes/incomeRoutes'));
+app.use('/api/expenses', require('./routes/expenses'));
 app.use('/api/calculateTax', require('./routes/taxApis')); 
 
 // Start server
