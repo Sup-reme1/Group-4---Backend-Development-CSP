@@ -2,10 +2,20 @@ const express = require("express");
 const router = express.Router();
 const Expense = require("../models/Expenses");
 
+// Middleware to check if user is authenticated
+function isAuth(req, res, next) {
+  if (!req.session.userId) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+  next();
+}
+
+
 // POST route
- router.post("/", async (req, res) => {
+ router.post("/", isAuth, async (req, res) => {
+    const userId = req.session.userId;
      try{
-         const {userId, title, amount, category} = req.body;
+         const {title, amount, category} = req.body;
          const expense = await 
          Expense.create({userId, title, amount, category});
          res.status (201).json(expense);
@@ -15,7 +25,7 @@ const Expense = require("../models/Expenses");
 });
 
 //  GET single by ID
-router.get("/:id", async(req, res) =>{
+router.get("/:id", isAuth, async(req, res) =>{
     try{
         const expense = await
         Expense.findById(req.params.id);
@@ -32,9 +42,9 @@ router.get("/:id", async(req, res) =>{
 
 // To fix this route
 // GET ALL for a user
-router.get('/', async (req, res) => {
+router.get('/', isAuth, async (req, res) => {
     try{
-        const expenses = await Expense.find();
+        const expenses = await Expense.find({userId: req.session.userId});
         res.status(200).json({success:true, data:expenses});
     }catch(err){
         res.status(500).json({success:false, message:'Server Error'});
@@ -42,10 +52,14 @@ router.get('/', async (req, res) => {
 });
 
 // /UPDATE an expense
-router.put('/:id', async (req, res) =>{
+router.put('/:id', isAuth, async (req, res) =>{
     try{
         const expenseId = req.params.id;
         const updatedData = req.body
+
+        if (updatedData.userId) {
+            delete updatedData.userId; // Prevent changing the userId
+        }   
         const updatedExpense = await Expense.findByIdAndUpdate(
             expenseId,
             updatedData,
@@ -62,7 +76,7 @@ router.put('/:id', async (req, res) =>{
 });
 
 // DELETE an expense by id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAuth, async (req, res) => {
     try{
         const expenseId = req.params.id;
         const deletedExpense = await 
