@@ -24,6 +24,16 @@ function isAuth(req, res, next) {
     }
 });
 
+// GET ALL for a user
+router.get('/', isAuth, async (req, res) => {
+    try{
+        const expenses = await Expense.find({userId: req.session.userId});
+        res.status(200).json({success:true, data:expenses});
+    }catch(err){
+        res.status(500).json({success:false, message:'Server Error'});
+    }
+});
+
 //  GET single by ID
 router.get("/:id", isAuth, async(req, res) =>{
     try{
@@ -40,16 +50,6 @@ router.get("/:id", isAuth, async(req, res) =>{
     }
 });
 
-// To fix this route
-// GET ALL for a user
-router.get('/', isAuth, async (req, res) => {
-    try{
-        const expenses = await Expense.find({userId: req.session.userId});
-        res.status(200).json({success:true, data:expenses});
-    }catch(err){
-        res.status(500).json({success:false, message:'Server Error'});
-    }
-});
 
 // /UPDATE an expense
 router.put('/:id', isAuth, async (req, res) =>{

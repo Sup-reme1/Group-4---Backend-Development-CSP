@@ -77,6 +77,6 @@ const result = engine.calculateAnnualTax({
     actualRent: 4000000
 });
 
-console.log(result);
+// console.log(result);
 
 module.exports = TaxService;
