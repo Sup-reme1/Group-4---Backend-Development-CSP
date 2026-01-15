@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors'); // 1. Added this line
 const session = require('express-session');
-// const methodOverride = require('method-override');
 const path = require('path');
 
 // Database connection
@@ -11,19 +11,22 @@ connectDB();
 // Initialize app
 const app = express();
 
+// 2. Added CORS configuration here
+app.use(cors({
+    origin: ['http://127.0.0.1:5501', 'http://localhost:5501'],
+    credentials: true
+}));
+
 // Middleware
-app.use(express.json()); // parse application/json
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(methodOverride('_method'));
 
 // Session middleware
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    // Enable when ready
-    // store: MongoStore.create({ mongoUrl: process.env.MONGO_URI })
 }));
 
 // Make session available in EJS templates
