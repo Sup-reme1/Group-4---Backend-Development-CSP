@@ -50,7 +50,6 @@ router.get("/:id", isAuth, async(req, res) =>{
     }
 });
 
-
 // /UPDATE an expense
 router.put('/:id', isAuth, async (req, res) =>{
     try{

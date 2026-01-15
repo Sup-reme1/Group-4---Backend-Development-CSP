@@ -8,14 +8,7 @@ const incomeSchema = new mongoose.Schema({
     required: true,
     index: true
   },
-  
-  // Income Details
-  description: {
-    type: String,
-    required: [true, 'Income description is required'],
-    trim: true
-  },
-  
+    
   // Income Type
   incomeType: {
     type: String,
@@ -31,25 +24,19 @@ const incomeSchema = new mongoose.Schema({
       'other'
     ]
   },
-  
+    
   // Amount & Currency
   amount: {
     type: Number,
     required: [true, 'Amount is required'],
     min: 0
   },
+
   currency: {
     type: String,
     required: true,
     enum: ['NGN', 'USD', 'GBP', 'EUR'],
     default: 'NGN'
-  },
-  exchangeRate: {
-    type: Number,
-    default: 1
-  },
-  amountInNaira: {
-    type: Number
   },
   
   // Date Information
@@ -58,6 +45,45 @@ const incomeSchema = new mongoose.Schema({
     required: [true, 'Date received is required'],
     index: true
   },
+  
+   // Client Name
+  clientName: {
+    type: String,
+    required: true
+  },
+
+  // Payment Method
+  paymentMethod: {
+    type: String,
+    enum: ['bank_transfer', 'cash', 'paypal', 'stripe', 'payoneer', 'cryptocurrency', 'other']
+  },
+
+  // Receipt/Invoice
+  receiptUrl: {
+    type: String
+  },
+  
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+
+  // exchangeRate: {
+  //   type: Number,
+  //   default: 1
+  // },
+
+  // Income Details
+  // description: {
+  //   type: String,
+  //   required: [true, 'Income description is required'],
+  //   trim: true
+  // },
+
+  // amountInNaira: {
+  //   type: Number
+  // },
+  
   // month: {
   //   type: Number,
   //   min: 1,
@@ -67,58 +93,46 @@ const incomeSchema = new mongoose.Schema({
   //   type: Number,
   //   index: true
   // },
-  taxYear: {
-    type: Number,
-    default: 2025
-  },
+
+  // taxYear: {
+  //   type: Number,
+  //   default: 2025
+  // },
   
   // Tax Information
-  isTaxable: {
-    type: Boolean,
-    default: true
-  },
-  taxWithheld: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
+  // isTaxable: {
+  //   type: Boolean,
+  //   default: true
+  // },
+  // taxWithheld: {
+  //   type: Number,
+  //   default: 0,
+  //   min: 0
+  // },
   
   // Source Information
-  source: {
-    name: String,
-    type: {
-      type: String,
-      enum: ['employer', 'client', 'platform', 'other']
-    }
-  },
+  // source: {
+  //   name: String,
+  //   type: {
+  //     type: String,
+  //     enum: ['employer', 'client', 'platform', 'other']
+  //   }
+  // },
   
-  // Payment Method
-  paymentMethod: {
-    type: String,
-    enum: ['bank_transfer', 'cash', 'paypal', 'stripe', 'payoneer', 'cryptocurrency', 'other']
-  },
   
   // Notes
-  notes: {
-    type: String,
-    trim: true
-  },
+  // notes: {
+  //   type: String,
+  //   trim: true
+  // },
   
-  // Receipt/Invoice
-  receiptUrl: {
-    type: String
-  },
   
   // Status
-  isVerified: {
-    type: Boolean,
-    default: false
-  },
+  // isVerified: {
+  //   type: Boolean,
+  //   default: false
+  // },
   
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
 }, {
   timestamps: true
 });
