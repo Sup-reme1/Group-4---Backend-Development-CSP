@@ -15,9 +15,9 @@ function isAuth(req, res, next) {
  router.post("/", isAuth, async (req, res) => {
     const userId = req.session.userId;
      try{
-         const {title, amount, category} = req.body;
+         const {title, description, amount, currency, dateReceived, category, recieptUrl} = req.body;
          const expense = await 
-         Expense.create({userId, title, amount, category});
+         Expense.create({userId, title, description, amount, currency, dateReceived, category, recieptUrl});
          res.status (201).json(expense);
     }catch (error){
         res.status(400).json({error: error.message});

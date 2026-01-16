@@ -66,8 +66,12 @@ const incomeSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
 
+  taxYear: {
+    type: Number,
+    default: 2026
+  },
   // exchangeRate: {
   //   type: Number,
   //   default: 1
@@ -94,10 +98,6 @@ const incomeSchema = new mongoose.Schema({
   //   index: true
   // },
 
-  // taxYear: {
-  //   type: Number,
-  //   default: 2025
-  // },
   
   // Tax Information
   // isTaxable: {
@@ -145,7 +145,7 @@ incomeSchema.index({ userId: 1, incomeType: 1 });
 // Pre-save middleware to calculate values
 incomeSchema.pre('save', function(next) {
   // Calculate Naira amount
-  this.amountInNaira = this.amount * (this.exchangeRate || 1);
+  // this.amountInNaira = this.amount * (this.exchangeRate || 1);
   
   // Extract month and year from dateReceived
   if (this.dateReceived) {

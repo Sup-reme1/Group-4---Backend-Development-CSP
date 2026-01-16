@@ -3,19 +3,14 @@ const Income = require('../models/Income');
 exports.createIncome = async (req, res) => {
   try {
     const {
-      description, // required
       incomeType, // required
       amount, // required
       currency,
-      exchangeRate,
       dateReceived, // required
-      taxYear,
-      isTaxable,
-      taxWithheld,
-      source,
+      clientName, // required
       paymentMethod,
-      notes,
-      receiptUrl
+      receiptUrl,
+      taxYear
     } = req.body;
 
     // test =  {
@@ -35,38 +30,24 @@ exports.createIncome = async (req, res) => {
     // }
 
     // Validate required fields
-    if (!description || !incomeType || !amount || !dateReceived) {
+    if (!incomeType || !amount || !dateReceived || !clientName) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide all required fields: description, incomeType, amount, dateReceived'
+        message: 'Please provide all required fields: incomeType, amount, dateReceived, clientName'
       });
     }
-
-    // // For demo: userId from request body (in production, get from auth middleware)
-    // const userId = req.body.userId;
-    // if (!userId) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: 'userId is required'
-    //   });
-    // }
 
     const userId = req.session.userId;
     // Create income entry
     const income = await Income.create({
       userId,
-      description,
       incomeType,
       amount,
       currency: currency || 'NGN',
-      exchangeRate: exchangeRate || 1,
       dateReceived,
       taxYear: taxYear || new Date().getFullYear(),
-      isTaxable: isTaxable !== undefined ? isTaxable : true,
-      taxWithheld: taxWithheld || 0,
-      source,
+      clientName,
       paymentMethod,
-      notes,
       receiptUrl
     });
 
@@ -114,14 +95,12 @@ exports.getIncomeByUser = async (req, res) => {
       .lean();
 
     // Calculate totals
-    const totalIncome = incomes.reduce((sum, income) => sum + income.amountInNaira, 0);
-    const totalTaxWithheld = incomes.reduce((sum, income) => sum + income.taxWithheld, 0);
+    const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
 
     res.status(200).json({
       success: true,
       count: incomes.length,
       totalIncome,
-      totalTaxWithheld,
       data: incomes
     });
 
