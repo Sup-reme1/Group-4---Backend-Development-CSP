@@ -30,6 +30,11 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        sameSite: 'none',  // Allow cross-origin requests
+        secure: true,      // Required for sameSite: 'none' in production (HTTPS)
+        httpOnly: true     // Prevent client-side access for security
+    }
 }));
 
 // Make session available in EJS templates
