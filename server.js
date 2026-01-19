@@ -32,11 +32,17 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        sameSite: 'none',  // Allow cross-origin requests
-        secure: true,      // Required for sameSite: 'none' in production (HTTPS)
+        sameSite: 'lax',  // Allow cross-origin requests
+        secure: false,      // Required for sameSite: 'none' in production (HTTPS)
         httpOnly: true,     // Prevent client-side access for security
         maxAge: 1000 * 60 * 60 * 24      // 1 day
     }
+    // cookie: {
+    //     sameSite: 'none',  // Allow cross-origin requests
+    //     secure: true,      // Required for sameSite: 'none' in production (HTTPS)
+    //     httpOnly: true,     // Prevent client-side access for security
+    //     maxAge: 1000 * 60 * 60 * 24      // 1 day
+    // }
 }));
 
 // Make session available in EJS templates
@@ -44,6 +50,7 @@ app.use((req, res, next) => {
     res.locals.userId = req.session.userId;
     next();
 });
+
 
 // View engine
 app.set('view engine', 'ejs');
