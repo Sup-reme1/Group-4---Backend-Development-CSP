@@ -51,6 +51,7 @@ router.post('/login', async (req, res) => {
         req.session.save(err => {
           if (err) console.error('Session save error:', err);
           console.log('User logged in, session saved:', req.session);
+          res.set('Set-Cookie', `session=${req.sessionID}; HttpOnly; SameSite=None; Secure`);
           return res.status(200).json({ message: 'Login successful' });
         });
 
