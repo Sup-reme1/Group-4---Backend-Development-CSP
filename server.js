@@ -13,7 +13,7 @@ const app = express();
 
 // 2. Added CORS configuration here
 app.use(cors({
-    origin: ['http://127.0.0.1:5501', 'http://localhost:5501'],
+    origin: ['http://127.0.0.1:5501', 'http://localhost:5501', 'https://ajibola-bello.github.io/'],
     credentials: true
 }));
 
@@ -27,19 +27,13 @@ app.use(session({
     name: "sid",
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false,   
     cookie: {
-        sameSite: 'lax',  // Allow cross-origin requests
-        secure: false,      // Required for sameSite: 'none' in production (HTTPS)
+        sameSite: 'none',  // Allow cross-origin requests
+        secure: true,      // Required for sameSite: 'none' in production (HTTPS)
         httpOnly: true,     // Prevent client-side access for security
         maxAge: 1000 * 60 * 60 * 24      // 1 day
     }
-    // cookie: {
-    //     sameSite: 'none',  // Allow cross-origin requests
-    //     secure: true,      // Required for sameSite: 'none' in production (HTTPS)
-    //     httpOnly: true,     // Prevent client-side access for security
-    //     maxAge: 1000 * 60 * 60 * 24      // 1 day
-    // }
 }));
 
 // Make session available in EJS templates
