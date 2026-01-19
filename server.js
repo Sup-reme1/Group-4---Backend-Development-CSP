@@ -27,13 +27,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Session middleware
 app.use(session({
+    name: "sid",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
         sameSite: 'none',  // Allow cross-origin requests
         secure: true,      // Required for sameSite: 'none' in production (HTTPS)
-        httpOnly: true     // Prevent client-side access for security
+        httpOnly: true,     // Prevent client-side access for security
+        maxAge: 1000 * 60 * 60 * 24      // 1 day
     }
 }));
 
