@@ -13,7 +13,10 @@ const app = express();
 
 // 2. Added CORS configuration here
 app.use(cors({
-    origin: ['http://127.0.0.1:5501', 'http://localhost:5501', 'https://ajibola-bello.github.io/'],
+    origin: ['http://127.0.0.1:5501', 'http://localhost:5501', 
+        'https://ajibola-bello.github.io',
+        'https://ajibola-bello.github.io//tax-app',
+    ],
     credentials: true
 }));
 
