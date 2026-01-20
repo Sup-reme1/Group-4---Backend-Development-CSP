@@ -16,6 +16,8 @@ app.use(cors({
     origin: ['http://127.0.0.1:5501', 'http://localhost:5501', 
         'https://ajibola-bello.github.io',
         'https://ajibola-bello.github.io//tax-app',
+        'https://sup-reme1.github.io/tax-app',
+        'https://sup-reme1.github.io',
     ],
     credentials: true
 }));
