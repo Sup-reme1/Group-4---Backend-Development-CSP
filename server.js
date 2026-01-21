@@ -12,14 +12,23 @@ connectDB();
 const app = express();
 
 // 2. Added CORS configuration here
+const allowedOrigins = ['http://127.0.0.1:5501', 'http://localhost:5501', 
+    'https://ajibola-bello.github.io',
+    'https://ajibola-bello.github.io//tax-app',
+    'https://sup-reme1.github.io/tax-app',
+    'https://sup-reme1.github.io',
+]
+
 app.use(cors({
-    origin: ['http://127.0.0.1:5501', 'http://localhost:5501', 
-        'https://ajibola-bello.github.io',
-        'https://ajibola-bello.github.io//tax-app',
-        'https://sup-reme1.github.io/tax-app',
-        'https://sup-reme1.github.io',
-    ],
-    credentials: true
+    origin: function (origin, callback) { 
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true); 
+        } else {
+            callback(new Error('Not allowed by CORS')); 
+        } 
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], 
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Middleware
@@ -27,29 +36,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Session middleware
-app.use(session({
-    name: "sid",
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,   
-    cookie: {
-        sameSite: 'none',  // Allow cross-origin requests
-        secure: true,      // Required for sameSite: 'none' in production (HTTPS)
-        httpOnly: true,     // Prevent client-side access for security
-        maxAge: 1000 * 60 * 60 * 24      // 1 day
-    }
-}));
 
-// Make session available in EJS templates
-app.use((req, res, next) => {
-    res.locals.userId = req.session.userId;
-    next();
-});
+//  Removed session middleware 
+// // Session middleware
+// app.use(session({
+//     name: "sid",
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false,   
+//     cookie: {
+//         sameSite: 'none',  // Allow cross-origin requests
+//         secure: true,      // Required for sameSite: 'none' in production (HTTPS)
+//         httpOnly: true,     // Prevent client-side access for security
+//         maxAge: 1000 * 60 * 60 * 24      // 1 day
+//     }
+// }));
 
-
-// View engine
-app.set('view engine', 'ejs');
 
 // ROUTES
 app.use('/api/user', require('./routes/user'));

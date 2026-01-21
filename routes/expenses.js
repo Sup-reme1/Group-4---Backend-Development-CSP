@@ -1,23 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const Expense = require("../models/Expenses");
-
-// Middleware to check if user is authenticated
-function isAuth(req, res, next) {
-  if (!req.session.userId) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
-  next();
-}
-
+const { isAuth } = require("../middleware/auth");
 
 // POST route
  router.post("/", isAuth, async (req, res) => {
-    const userId = req.session.userId;
+    const userId = req.user.Id;
      try{
-         const {title, amount, category} = req.body;
+         const {title, description, amount, currency, dateReceived, category, recieptUrl} = req.body;
          const expense = await 
-         Expense.create({userId, title, amount, category});
+         Expense.create({userId, title, description, amount, currency, dateReceived, category, recieptUrl});
          res.status (201).json(expense);
     }catch (error){
         res.status(400).json({error: error.message});
@@ -27,7 +19,7 @@ function isAuth(req, res, next) {
 // GET ALL for a user
 router.get('/', isAuth, async (req, res) => {
     try{
-        const expenses = await Expense.find({userId: req.session.userId});
+        const expenses = await Expense.find({userId: req.user.Id});
         res.status(200).json({success:true, data:expenses});
     }catch(err){
         res.status(500).json({success:false, message:'Server Error'});

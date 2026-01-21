@@ -2,10 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-
-// router.get('/signup', (req, res) => {
-//     res.render('signup');
-// });
+const jwt = require('jsonwebtoken');
 
 // POST Signup
 router.post('/signup', async (req, res) => {
@@ -15,26 +12,22 @@ router.post('/signup', async (req, res) => {
         // Check if user already exists
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.render('signup', { error: 'Email already registered' });
+            return res.status(400).json({ error: 'Email already registered' });
         }
 
         // Create new user
         const user = new User({ name, email, password });
-        await user.save(); // password is hashed automatically
-
+        await user.save(); // password is hashed automatically        
         // Redirect to login page after signup
         res.status(200).json({ 'message': 'User registered successfully' });
-
-    } catch (err) {
+        
+      } catch (err) {
         console.error(err);
         res.status(500).json({ 'message': 'Something went wrong. Try again.' });
-    }
-});
-
-
-// router.get('/login', (req, res) => {
-//     res.render('login');
-// });
+      }
+    });
+    
+    
 // POST Login
 router.post('/login', async (req, res) => {
     try {
@@ -42,20 +35,16 @@ router.post('/login', async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user) return res.status(500).json({ 'message': 'User not found' });
-
+        
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(500).json({ 'message': 'Invalid credentials' });
+        
+        // Generate JWT Token
+        const token = jwt.sign({ Id: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // Save user session
-        req.session.userId = user._id;
-        req.session.save(err => {
-          if (err) console.error('Session save error:', err);
-          console.log('User logged in, session saved:', req.session);
-          res.set('Set-Cookie', `session=${req.sessionID}; HttpOnly; SameSite=None; Secure`);
-          return res.status(200).json({ message: 'Login successful' });
-        });
-
-    } catch (err) {
+        return res.status(200).json({ message: 'Login successful', token });
+        
+      } catch (err) {
         console.error(err);
         res.status(500).json({ 'message': 'Something went wrong. Try again.' });
     }
@@ -106,11 +95,6 @@ router.get('/logout', (req, res) => {
         res.clearCookie('connect.sid');
     return res.status(200).json({ success: true, message: 'Logged out' });
     });
-});
-
-// Debug session (dev only)
-router.get('/session', (req, res) => {
-  res.json({ session: req.session, cookies: req.headers.cookie || null });
 });
 
 module.exports = router;

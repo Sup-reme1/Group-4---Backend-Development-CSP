@@ -8,21 +8,14 @@ const {
   updateIncome,
   deleteIncome
 } = require('../controllers/incomeController');
-
-// Middleware to check if user is authenticated
-function isAuth(req, res, next) {
-  if (!req.session.userId) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
-  next();
-}
+const { isAuth } = require('../middleware/auth');
 
 // Create new income entry
 router.post('/', isAuth, createIncome);
 
 // Get all income entries for a user (with optional filters)
 // This request supports optional query parameters for filtering: ?taxYear=&month=&incomeType=&startDate=&endDate=
-router.get('/:userId', isAuth, getIncomeByUser);
+router.get('/', isAuth, getIncomeByUser);
 
 // Get income summary by tax year
 // router.get('/:userId/summary/:taxYear', isAuth, getIncomeSummary);

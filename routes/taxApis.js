@@ -1,12 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const TaxService = require('../TaxEngine/taxCalculator');
-
-// Middleware to check if user is authenticated
-function isAuth(req, res, next) {
-    if (!req.session.userId) return res.redirect('/users/login');
-    next();
-}
+const { isAuth } = require('../middleware/auth');
 
 router.get('/', isAuth, async (req, res) => {
     try {
