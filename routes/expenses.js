@@ -57,12 +57,12 @@ router.put('/:id', isAuth, async (req, res) =>{
             {new:true}
         );
         if(!updatedExpense){
-            res.status(404).json({message: 'Expense not found'});
+            res.status(404).json({success: false, message: 'Expense not found'});
         }
-        res.status(200).json(updatedExpense);
+        res.status(200).json({ success: true, updatedExpense });
     }catch (err){
         console.error(err);
-        res.status(500).json({message: 'Server error', error:err.message});
+        res.status(500).json({success: false, message: 'Server error', error:err.message});
     }
 });
 
@@ -76,11 +76,11 @@ router.delete('/:id', isAuth, async (req, res) => {
         if(!deletedExpense){
             return res.status(404).json({message: 'Expense not found'});
         }
-        res.status(200).json({message: 'Expense deleted successfully', data: deletedExpense});
+        res.status(200).json({success: true, message: 'Expense deleted successfully', data: deletedExpense});
 
     }catch(err){
         console.error(err);
-        res.status(500).json({message: 'Server error', error: err.message});
+        res.status(500).json({success:false, message: 'Server error', error: err.message});
     }
 });
 module.exports = router;
